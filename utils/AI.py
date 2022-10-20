@@ -9,7 +9,7 @@ import urllib.request, urllib.error, urllib.parse
 import base64
 import numpy as np
 from spleeter.separator import Separator
-from spleeter.audio.adapter import get_default_audio_adapter
+from spleeter.audio.adapter import AudioAdapter
 from PySide2.QtWidgets import QGridLayout, QDialog, QPushButton, QProgressBar, QLabel, QComboBox, QLineEdit, QGroupBox,\
     QWidget, QSlider
 from PySide2.QtCore import QTimer, Signal, QThread, Qt, QPoint
@@ -303,7 +303,7 @@ class separateQThread(QThread):  # AI分离人声音轨及打轴的核心线程
         if self.after == 0:  # 向后查询至少要等于1
             self.after = 1
         self.separate = Separator('spleeter:2stems', stft_backend='tensorflow', multiprocess=multiThread)
-        self.audioLoader = get_default_audio_adapter()
+        self.audioLoader = AudioAdapter.default()
         self.terminalToken = False
 
     def run(self):
