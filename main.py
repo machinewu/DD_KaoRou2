@@ -74,6 +74,6 @@ if __name__ == '__main__':
     mainWindow.showMaximized()
     mainWindow.show()
     splash.finish(mainWindow)
-    downloads = downloadUpdates()
-    downloads.start()
+    # downloads = downloadUpdates()
+    # downloads.start()
     sys.exit(app.exec_())

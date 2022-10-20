@@ -84,12 +84,12 @@ class pay(QDialog):
             self.bossTable.setColumnWidth(i, 105)
         self.bossTable.setHorizontalHeaderLabels(['石油王', '打赏'])
         self.bossTable.setItem(0, 0, QTableWidgetItem('石油王鸣谢名单'))
-        self.bossTable.setItem(0, 1, QTableWidgetItem('正在获取...'))
+        # self.bossTable.setItem(0, 1, QTableWidgetItem('正在获取...'))
         layout.addWidget(self.bossTable, 0, 1, 3, 1)
 
-        self.thankToBoss = thankToBoss()
-        self.thankToBoss.bossList.connect(self.updateBossList)
-        self.thankToBoss.start()
+        # self.thankToBoss = thankToBoss()
+        # self.thankToBoss.bossList.connect(self.updateBossList)
+        # self.thankToBoss.start()
 
     def updateBossList(self, bossList):
         self.bossTable.clear()
