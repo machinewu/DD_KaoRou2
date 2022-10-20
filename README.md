@@ -13,3 +13,5 @@
 6. 新增Anime4K画质扩展功能（只适合给动画类视频扩展，三次元视频扩展会变成油画效果）
 
 # B站视频教程：https://www.bilibili.com/video/BV1p5411b7o7
+
+## 注意：需要Python 3.8及以上版本才能运行
