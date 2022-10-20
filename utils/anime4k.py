@@ -193,8 +193,7 @@ class preview(QThread):
             cmd += ['-a', '-e', postProcessing]
         if self.args['ACNet']:
             cmd += [self.args['ACNet'], self.args['hdnMode']]
-        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        p.wait()
+        p = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, text=True, encoding='utf-8')
         self.finish.emit()
 
 
@@ -464,10 +463,10 @@ class Anime4KDialog(QWidget):
             self.outputPathEdit.setText(_path + '_Anime4K' + _type)
 
             cmd = ['ffmpeg.exe', '-i', self.videoPath]
-            p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-            p.wait()
+            p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, encoding='utf-8')
             try:
-                for l in p.stdout.readlines():  # FFMpeg这蛋疼的视频信息格式
+                self.duration = 114514
+                for l in p.stdout.split('\n'):  # FFMpeg这蛋疼的视频信息格式
                     l = l.decode('gb18030', 'ignore')
                     if 'Duration' in l:
                         self.duration = calSubTime(l.split(' ')[3][:-1])

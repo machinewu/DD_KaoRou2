@@ -254,9 +254,8 @@ class sepMainAudio(QThread):  # 创建原音轨文件
         self.audioPath = r'temp_audio\audio_original.aac'  # 分离原音轨
         if not os.path.exists(self.audioPath):
             cmd = ['ffmpeg.exe', '-y', '-i', self.videoPath, '-vn', '-c', 'copy', self.audioPath]
-            p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-            p.wait()
-            if p.poll() == 1:  # 复制编码转码出错则按ffmpeg默认编码重新转一遍
+            p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, encoding='utf-8')
+            if p.returncode != 0:  # 复制编码转码出错则按ffmpeg默认编码重新转一遍
                 cmd = ['ffmpeg.exe', '-y', '-i', self.videoPath, '-vn', self.audioPath]
                 p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
@@ -320,11 +319,10 @@ class separateQThread(QThread):  # AI分离人声音轨及打轴的核心线程
         voiceWave_smooth_scale = []
         for cut in range(cuts):
             if cut >= self.videoStart and cut <= self.videoEnd and not self.terminalToken:  # 只分析选中时间区域
-                audioPath = 'temp_audio.m4a'
+                audioPath = r'temp_audio\temp_audio.m4a'
                 cmd = ['ffmpeg.exe', '-y', '-i', self.audioPath, '-vn', '-ss', str(cut * 60), '-t', '60', audioPath]
-                p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-                p.wait()
-                for line in p.stdout.readlines():
+                p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, encoding='utf-8')
+                for line in p.stdout.split('\n'):
                     try:
                         line = line.decode('gb18030', 'ignore')
                         if 'Audio:' in line:
@@ -333,9 +331,10 @@ class separateQThread(QThread):  # AI分离人声音轨及打轴的核心线程
                         pass
                 try:
                     line = line.lower()
-                    for hz in line.split(','):
-                        if 'hz' in hz:
-                            hz = int(hz.split('hz')[0])
+                    hz = 44100
+                    for _hz in line.split(','):
+                        if 'hz' in _hz:
+                            hz = int(_hz.split('hz')[0].strip())
                             break
                 except:
                     hz = 44100

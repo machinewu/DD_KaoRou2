@@ -76,9 +76,8 @@ class videoEncoder(QThread):
         self.cmd = cmd
 
     def run(self):
-        self.p = subprocess.Popen(['ffmpeg.exe', '-i', self.videoPath, '-map', '0:v:0', '-c', 'copy', '-f', 'null', '-'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        self.p.wait()
-        frames = self.p.stdout.readlines()[-2].decode('gb18030').split('frame=')[-1].split(' ')
+        self.p = subprocess.run(['ffmpeg.exe', '-i', self.videoPath, '-map', '0:v:0', '-c', 'copy', '-f', 'null', '-'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, encoding='utf-8')
+        frames = self.p.stdout.split('\n')[-2].decode('gb18030').split('frame=')[-1].split(' ')
         for f in frames:
             if f:
                 totalFrames = int(f)

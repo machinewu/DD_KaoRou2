@@ -1159,7 +1159,7 @@ class MainWindow(QMainWindow):  # Main window
 
     def open(self):
         self.videoPath = QFileDialog.getOpenFileName(self,"请选择视频文件", None,
-        "视频文件 (*.mp4 *.avi *.flv);;音频文件 (*.mp3 *.wav *.aac);;所有文件 (*.*)")[0]
+        "视频文件 (*.mp4 *.avi *.flv *.mkv);;音频文件 (*.mp3 *.wav *.aac *.flac);;所有文件 (*.*)")[0]
         if self.videoPath:
             self.openVideo(self.videoPath)
 
@@ -1186,10 +1186,10 @@ class MainWindow(QMainWindow):  # Main window
             for f in os.listdir('temp_audio'):
                 os.remove('temp_audio\%s' % f)
             cmd = ['ffmpeg.exe', '-i', videoPath]
-            p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-            p.wait()
+            p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, encoding='utf-8')
             try:
-                for l in p.stdout.readlines():  # FFMpeg这蛋疼的视频信息格式
+                self.duration = 114514
+                for l in p.stdout.split('\n'):  # FFMpeg这蛋疼的视频信息格式
                     l = l.decode('gb18030', 'ignore')
                     if 'Duration' in l:
                         self.duration = calSubTime(l.split(' ')[3][:-1])
